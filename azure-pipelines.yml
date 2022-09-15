@@ -60,6 +60,6 @@ steps:
 - task: PublishBuildArtifacts@1
   displayName: Create Build Artifact for Veracode Static Pipeline Scanner Results
   inputs:
-    PathtoPublish: '"$(build.artifactStagingDirectory)\results.json'
+    PathtoPublish: '"results.json'
     ArtifactName: 'Build'
     publishLocation: 'Container'
