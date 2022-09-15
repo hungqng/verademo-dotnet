@@ -7,39 +7,63 @@
 trigger:
 - main
 
+resources:
+  repositories:
+    - repository: devops-scripts
+      type: github
+      name: hungqng/verademo-dotnet
+      endpoint: hungqng
+
 pool:
   vmImage: 'windows-latest'
+  #vmImage: 'ubuntu-latest'
 
 variables:
-  solution: '**/*.sln'
-  buildPlatform: 'Any CPU'
-  buildConfiguration: 'Release'
+- group: 'Veracode Credentials'
 
-steps:
-- task: NuGetToolInstaller@1
+stages:
+- stage: Build
 
-- task: NuGetCommand@2
-  inputs:
-    restoreSolution: '$(solution)'
+  jobs:
+  - job: Build_Debug
+    displayName: Debug Build
 
-- task: VSBuild@1
-  inputs:
-    solution: '$(solution)'
-    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+    steps:
+    - template: steps/abstract-build-steps.yml@devops-scripts
+      parameters:
+        buildConfiguration: 'Debug'
 
-- task: CmdLine@2
-  displayName: Veracode Static Pipeline Scanner
-  inputs:
-    script: |
-      curl -sSO https://downloads.veracode.com/securityscan/pipeline-scan-LATEST.zip
-      unzip -o pipeline-scan-LATEST.zip
-      java -jar pipeline-scan.jar -vid $(VERACODE_API_ID) -vkey $(VERACODE_API_KEY) -f $(build.artifactstagingdirectory)\Verademo-dotnet.zip || true
+    - task: PublishPipelineArtifact@1
+      inputs:
+        targetPath: $(Build.StagingDirectory)
+        artifactName: WebApp_Debug
 
-- task: PublishBuildArtifacts@1
-  displayName: Create Build Artifact for Veracode Static Pipeline Scanner Results
-  inputs:
-    PathtoPublish: 'results.json'
-    ArtifactName: 'Build'
-    publishLocation: 'Container'
+- stage: Security_Testing
+  jobs:       
+  - job: SAST_Security_Testing
+    displayName: Static Analysis Security Testing
+
+    steps:
+    - checkout: none
+    - task: DownloadPipelineArtifact@2
+      displayName: "Download Artifact"
+      inputs:
+        targetPath: $(Build.StagingDirectory)
+        artifact: WebApp_Debug 
+        
+    - script: ls -la $(Agent.BuildDirectory)
+    - script: ls -la $(Build.StagingDirectory)
+      displayName: "Show Workspace Contents"
+   
+    - script: echo 'Prepare Veracode Pipeline SAST'
+    - script: curl -sSO https://downloads.veracode.com/securityscan/pipeline-scan-LATEST.zip
+      displayName: "Download Pipeline Scan"
+
+    - script: unzip -o pipeline-scan-LATEST.zip
+      displayName: "Unzip Pipeline Scan"
+
+    - script: java -jar pipeline-scan.jar --version
+      displayName: "Pipeline Scan Version" 
+      
+    - script: java -jar pipeline-scan.jar -vid $(VERACODE_API_ID) -vkey $(VERACODE_API_KEY) -f $(Build.StagingDirectory)\$(system.teamProject).zip || true
+      displayName: "Running Analysis"
