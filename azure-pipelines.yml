@@ -47,8 +47,8 @@ steps:
 - task: Veracode@3
   inputs:
     ConnectionDetailsSelection: 'Credentials'
-    apiId: '$(VERACODE_API_ID)'
-    apiKey: '$(VERACODE_API_KEY)'
+    apiId: 'bc9f9342b9d1f27fe1fc8fcc45345e8e'
+    apiKey: '82d50764cc0dd0761b706fdaaeff63e2d7dfd18206af111c5f3a5f839385a368e3518fd489c8251478a44ee8156352c96e845a5728203f4a5a6868718c4bf088'
     veracodeAppProfile: 'verademo-azure'
     version: '$(build.buildNumber)'
     filepath: '$(build.artifactstagingdirectory)'
