@@ -31,15 +31,11 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
-- task: VSTest@2
-  inputs:
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
 - task: Veracode@3
   inputs:
     ConnectionDetailsSelection: 'Endpoint'
     AnalysisService: 'Verademo'
-    veracodeAppProfile: 'Veradmo-Azure'
+    veracodeAppProfile: 'Veradmo'
     version: '$(build.buildNumber)'
     filepath: '$(build.artifactstagingdirectory)'
     sandboxName: 'DailyBuild'
@@ -49,7 +45,8 @@ steps:
     ConnectionDetailsSelection: 'Credentials'
     apiId: '$(VERACODE_API_ID)'
     apiKey: '$(VERACODE_API_KEY)'
-    veracodeAppProfile: 'verademo-azure'
+    veracodeAppProfile: 'Verademo'
+    sandboxName: 'Azure DevOps'
     version: '$(build.buildNumber)'
     filepath: '$(build.artifactstagingdirectory)'
     #maximumWaitTime: '360'
