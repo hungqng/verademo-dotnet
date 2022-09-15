@@ -28,37 +28,80 @@ steps:
 - task: VSBuild@1
   inputs:
     solution: '$(solution)'
+    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
-- task: Veracode@3
-  inputs:
-    ConnectionDetailsSelection: 'Endpoint'
-    AnalysisService: 'Verademo'
-    veracodeAppProfile: 'Veradmo'
-    version: '$(build.buildNumber)'
-    filepath: '$(build.artifactstagingdirectory)'
-    sandboxName: 'DailyBuild'
-    maximumWaitTime: '360'
-- task: Veracode@3
-  inputs:
-    ConnectionDetailsSelection: 'Credentials'
-    apiId: '$(VERACODE_API_ID)'
-    apiKey: '$(VERACODE_API_KEY)'
-    veracodeAppProfile: 'Verademo'
-    sandboxName: 'Azure DevOps'
-    version: '$(build.buildNumber)'
-    filepath: '$(build.artifactstagingdirectory)'
-    #maximumWaitTime: '360'
-- task: DownloadPipelineArtifact@2
-  inputs:
-    patterns: '**/*.exe,**/*.dll,**/*.pdb' # ensures Veracode gets the PDB files for Static Analyisis
+- task: NuGetToolInstaller@1
 
-# This task makes the pipeline build artifacts available in a known location for upload to Veracode
+- task: NuGetCommand@2
+  inputs:
+    restoreSolution: '$(solution)'
+
+- task: VSBuild@1
+  inputs:
+    solution: '$(solution)'
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
+
+- task: VSTest@2
+  inputs:
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
 - task: PublishPipelineArtifact@1
   inputs:
     targetPath: $(System.DefaultWorkingDirectory)/bin/Debug
     artifactName: Debug
+- task: DownloadPipelineArtifact@2
+  inputs:
+    patterns: '**/*.exe,**/*.dll,**/*.pdb'
+
+- task: Veracode@3
+  inputs:
+    ConnectionDetailsSelection: 'Endpoint'
+    AnalysisService: 'Veracode'
+    veracodeAppProfile: 'Verademo-Azure'
+    version: '$(build.buildNumber)'
+    filepath: '$(build.artifactstagingdirectory)'
+    sandboxName: 'Azure DevOps'
+    createProfile: false
+    apiId: '$(VERACODE_API_ID_'
+    apiKey: '$(VERACODE_API_KEY)'
+    failBuildOnPolicyFail: false
+    failBuildIfUploadAndScanBuildStepFails: false
+
+- task: CmdLine@2
+  displayName: Veracode Static Pipeline Scanner
+  inputs:
+    script: |
+      curl -sSO https://downloads.veracode.com/securityscan/pipeline-scan-LATEST.zip
+      unzip -o pipeline-scan-LATEST.zip
+      java -jar pipeline-scan.jar -vid $(VERACODE_API_ID) -vkey $(VERACODE_API_KEY) -f $(build.artifactstagingdirectory)\Verademo-dotnet.zip || true
+- task: PublishBuildArtifacts@1
+  displayName: Create Build Artifact for Veracode Static Pipeline Scanner Results
+  inputs:
+    PathtoPublish: '"$(build.artifactStagingDirectory)\results.json'
+    ArtifactName: 'Build'
+    publishLocation: 'Container'
+    
+# - task: Veracode@3
+#   inputs:
+#     ConnectionDetailsSelection: 'Credentials'
+#     apiId: '$(VERACODE_API_ID)'
+#     apiKey: '$(VERACODE_API_KEY)'
+#     veracodeAppProfile: 'verademo-azure'
+#     version: '$(build.buildNumber)'
+#     filepath: '$(build.artifactstagingdirectory)'
+#     #maximumWaitTime: '360'
+# - task: DownloadPipelineArtifact@2
+#   inputs:
+#     patterns: '**/*.exe,**/*.dll,**/*.pdb' # ensures Veracode gets the PDB files for Static Analyisis
+
+# # This task makes the pipeline build artifacts available in a known location for upload to Veracode
+# - task: PublishPipelineArtifact@1
+#   inputs:
+#     targetPath: $(System.DefaultWorkingDirectory)/bin/Debug
+#     artifactName: Debug
 
 # variables:
 # - group: 'Veracode Credentials'
