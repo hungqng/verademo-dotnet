@@ -18,52 +18,97 @@ pool:
   vmImage: 'windows-latest'
   #vmImage: 'ubuntu-latest'
 
-variables:
-- group: 'Veracode Credentials'
+steps:
+- task: NuGetToolInstaller@1
 
-stages:
-- stage: Build
+- task: NuGetCommand@2
+  inputs:
+    restoreSolution: '$(solution)'
 
-  jobs:
-  - job: Build_Debug
-    displayName: Debug Build
+- task: VSBuild@1
+  inputs:
+    solution: '$(solution)'
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
 
-    steps:
-    - template: steps/abstract-build-steps.yml@devops-scripts
-      parameters:
-        buildConfiguration: 'Debug'
+- task: VSTest@2
+  inputs:
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
+- task: Veracode@3
+  inputs:
+    ConnectionDetailsSelection: 'Endpoint'
+    AnalysisService: 'Verademo'
+    veracodeAppProfile: 'Veradmo-Azure'
+    version: '$(build.buildNumber)'
+    filepath: '$(build.artifactstagingdirectory)'
+    sandboxName: 'DailyBuild'
+    maximumWaitTime: '360'
+- task: Veracode@3
+  inputs:
+    ConnectionDetailsSelection: 'Credentials'
+    apiId: '$(VERACODE_API_ID)'
+    apiKey: '$(VERACODE_API_KEY)'
+    veracodeAppProfile: 'verademo-azure'
+    version: '$(build.buildNumber)'
+    filepath: '$(build.artifactstagingdirectory)'
+    #maximumWaitTime: '360'
+- task: DownloadPipelineArtifact@2
+  inputs:
+    patterns: '**/*.exe,**/*.dll,**/*.pdb' # ensures Veracode gets the PDB files for Static Analyisis
 
-    - task: PublishPipelineArtifact@1
-      inputs:
-        targetPath: $(Build.StagingDirectory)
-        artifactName: WebApp_Debug
+# This task makes the pipeline build artifacts available in a known location for upload to Veracode
+- task: PublishPipelineArtifact@1
+  inputs:
+    targetPath: $(System.DefaultWorkingDirectory)/bin/Debug
+    artifactName: Debug
 
-- stage: Security_Testing
-  jobs:       
-  - job: SAST_Security_Testing
-    displayName: Static Analysis Security Testing
+# variables:
+# - group: 'Veracode Credentials'
 
-    steps:
-    - checkout: none
-    - task: DownloadPipelineArtifact@2
-      displayName: "Download Artifact"
-      inputs:
-        targetPath: $(Build.StagingDirectory)
-        artifact: WebApp_Debug 
+# stages:
+# - stage: Build
+
+#   jobs:
+#   - job: Build_Debug
+#     displayName: Debug Build
+
+#     steps:
+#     - template: steps/abstract-build-steps.yml@devops-scripts
+#       parameters:
+#         buildConfiguration: 'Debug'
+
+#     - task: PublishPipelineArtifact@1
+#       inputs:
+#         targetPath: $(Build.StagingDirectory)
+#         artifactName: WebApp_Debug
+
+# - stage: Security_Testing
+#   jobs:       
+#   - job: SAST_Security_Testing
+#     displayName: Static Analysis Security Testing
+
+#     steps:
+#     - checkout: none
+#     - task: DownloadPipelineArtifact@2
+#       displayName: "Download Artifact"
+#       inputs:
+#         targetPath: $(Build.StagingDirectory)
+#         artifact: WebApp_Debug 
         
-    - script: ls -la $(Agent.BuildDirectory)
-    - script: ls -la $(Build.StagingDirectory)
-      displayName: "Show Workspace Contents"
+#     - script: ls -la $(Agent.BuildDirectory)
+#     - script: ls -la $(Build.StagingDirectory)
+#       displayName: "Show Workspace Contents"
    
-    - script: echo 'Prepare Veracode Pipeline SAST'
-    - script: curl -sSO https://downloads.veracode.com/securityscan/pipeline-scan-LATEST.zip
-      displayName: "Download Pipeline Scan"
+#     - script: echo 'Prepare Veracode Pipeline SAST'
+#     - script: curl -sSO https://downloads.veracode.com/securityscan/pipeline-scan-LATEST.zip
+#       displayName: "Download Pipeline Scan"
 
-    - script: unzip -o pipeline-scan-LATEST.zip
-      displayName: "Unzip Pipeline Scan"
+#     - script: unzip -o pipeline-scan-LATEST.zip
+#       displayName: "Unzip Pipeline Scan"
 
-    - script: java -jar pipeline-scan.jar --version
-      displayName: "Pipeline Scan Version" 
+#     - script: java -jar pipeline-scan.jar --version
+#       displayName: "Pipeline Scan Version" 
       
-    - script: java -jar pipeline-scan.jar -vid $(VERACODE_API_ID) -vkey $(VERACODE_API_KEY) -f $(Build.StagingDirectory)\$(system.teamProject).zip || true
-      displayName: "Running Analysis"
+#     - script: java -jar pipeline-scan.jar -vid $(VERACODE_API_ID) -vkey $(VERACODE_API_KEY) -f $(Build.StagingDirectory)\$(system.teamProject).zip || true
+#       displayName: "Running Analysis"
