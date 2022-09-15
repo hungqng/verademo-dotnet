@@ -63,3 +63,14 @@ steps:
     PathtoPublish: '"results.json'
     ArtifactName: 'Build'
     publishLocation: 'Container'
+
+- task: PowerShell@2
+  displayName: Veracode Software Composition Analysis
+  inputs:
+    targetType: 'inline'
+    script: |
+      $env:SRCCLR_API_TOKEN="$(SCATOKEN)"
+      Set-ExecutionPolicy  AllSigned -Scope Process -Force
+      iex ((New-Object System.Net.WebClient).DownloadString('https://download.srcclr.com/ci.ps1'))
+      srcclr scan
+    pwsh: true
