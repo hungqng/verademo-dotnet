@@ -30,7 +30,7 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
-- task: Veracode@3
+- task: Veracode@2
   inputs:
     ConnectionDetailsSelection: 'Endpoint'
     AnalysisService: 'Veracode'
@@ -43,3 +43,8 @@ steps:
     apiKey: '$(VERACODE_API_KEY)'
     failBuildOnPolicyFail: false
     failBuildIfUploadAndScanBuildStepFails: false
+
+- task: VSTest@3
+  inputs:
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
