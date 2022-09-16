@@ -74,4 +74,4 @@ steps:
       iex ((New-Object System.Net.WebClient).DownloadString('https://download.srcclr.com/ci.ps1'))
       srcclr scan
   env:
-    SRCCLR_API_TOKEN: $(SCATOKEN)
+    SRCCLR_API_TOKEN: $(SRCCLRTOKEN)
