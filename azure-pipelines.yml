@@ -1,4 +1,4 @@
-eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzUzNDk3LCJleHAiOjE2NjM2MjU2MzYsImF1dGhvcml0aWVzIjoiQUdFTlQiLCJqdGkiOiIzZGIwNjVmYS02MjE5LTQ2M2MtYjIwMi1iMTEyYTc3ZDJhYWQiLCJjbGllbnRfaWQiOiIiLCJzY29wZSI6W119.OQhCTqJFSbd925MXAQsNRh-jUYeQFUNG-N2goQ8uWTqtMHdKuieX3y4fUCHskftxqtZQmB_D95kzKZqs4LmHQiXWcACZWJZ-LRuaHkHi0csXwwvaR8HwVy6icASitw-Kn9v7pO0fdSYnPYlTVUS8rauCp4SGzEO5-VnsIpHAmGY# ASP.NET
+# ASP.NET
 # Build and test ASP.NET projects.
 # Add steps that publish symbols, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/apps/aspnet/build-aspnet-4
