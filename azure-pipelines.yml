@@ -65,7 +65,7 @@ steps:
     publishLocation: 'Container'
 
 - task: PowerShell@2
-  displayName: Veracode SCA
+  displayName: Veracode Software Composition Analysis
   inputs:
     targetType: 'inline'
     script: |
@@ -73,4 +73,4 @@ steps:
       iex ((New-Object System.Net.WebClient).DownloadString('https://download.srcclr.com/ci.ps1'))
       srcclr scan
   env:
-    SRCCLR_API_TOKEN: $(SCATOKEN)
+    SRCCLR_API_TOKEN: $(SRCCLR_API_TOKEN)
