@@ -30,39 +30,39 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
-# - task: Veracode@3
-#   inputs:
-#     ConnectionDetailsSelection: 'Endpoint'
-#     AnalysisService: 'Veracode'
-#     veracodeAppProfile: 'Verademo'
-#     version: '$(build.buildNumber)'
-#     filepath: '$(build.artifactstagingdirectory)'
-#     sandboxName: 'Azure DevOps'
-#     createProfile: false
-#     apiId: '$(VERACODE_API_ID_'
-#     apiKey: '$(VERACODE_API_KEY)'
-#     failBuildOnPolicyFail: false
-#     failBuildIfUploadAndScanBuildStepFails: false
+- task: Veracode@3
+  inputs:
+    ConnectionDetailsSelection: 'Endpoint'
+    AnalysisService: 'Veracode'
+    veracodeAppProfile: 'Verademo'
+    version: '$(build.buildNumber)'
+    filepath: '$(build.artifactstagingdirectory)'
+    sandboxName: 'Azure DevOps'
+    createProfile: false
+    apiId: '$(VERACODE_API_ID_'
+    apiKey: '$(VERACODE_API_KEY)'
+    failBuildOnPolicyFail: false
+    failBuildIfUploadAndScanBuildStepFails: false
 
-# - task: VSTest@2
-#   inputs:
-#     platform: '$(buildPlatform)'
-#     configuration: '$(buildConfiguration)'
+- task: VSTest@2
+  inputs:
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
 
-# - task: CmdLine@2
-#   displayName: Veracode Static Pipeline Scanner
-#   inputs:
-#     script: |
-#       curl -sSO https://downloads.veracode.com/securityscan/pipeline-scan-LATEST.zip
-#       unzip -o pipeline-scan-LATEST.zip
-#       java -jar pipeline-scan.jar -vid $(VERACODE_API_ID) -vkey $(VERACODE_API_KEY) -f $(build.artifactstagingdirectory)\Verademo-dotnet.zip || true
+- task: CmdLine@2
+  displayName: Veracode Static Pipeline Scanner
+  inputs:
+    script: |
+      curl -sSO https://downloads.veracode.com/securityscan/pipeline-scan-LATEST.zip
+      unzip -o pipeline-scan-LATEST.zip
+      java -jar pipeline-scan.jar -vid $(VERACODE_API_ID) -vkey $(VERACODE_API_KEY) -f $(build.artifactstagingdirectory)\Verademo-dotnet.zip || true
 
-# - task: PublishBuildArtifacts@1
-#   displayName: Create Build Artifact for Veracode Static Pipeline Scanner Results
-#   inputs:
-#     PathtoPublish: '"results.json'
-#     ArtifactName: 'Build'
-#     publishLocation: 'Container'
+- task: PublishBuildArtifacts@1
+  displayName: Create Build Artifact for Veracode Static Pipeline Scanner Results
+  inputs:
+    PathtoPublish: '"results.json'
+    ArtifactName: 'Build'
+    publishLocation: 'Container'
 
 - task: PowerShell@2
   displayName: Veracode Software Composition Analysis
@@ -73,4 +73,4 @@ steps:
     script: |
       Set-ExecutionPolicy AllSigned -Scope Process -Force;
       iex ((New-Object System.Net.WebClient).DownloadString('https://download.srcclr.com/ci.ps1'));
-      srcclr --profile="Verademo Azure DevOps" scan --url https://github.com/hungqng/verademo-dotnet
+      srcclr scan
