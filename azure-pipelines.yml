@@ -71,6 +71,6 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      Set-ExecutionPolicy AllSigned -Scope Process -Force;
-      iex ((New-Object System.Net.WebClient).DownloadString('https://download.srcclr.com/ci.ps1'));
-      srcclr --profile="Verademo Azure DevOps" scan
+      Set-ExecutionPolicy AllSigned -Scope Process -Force
+      iex ((New-Object System.Net.WebClient).DownloadString('https://download.srcclr.com/ci.ps1'))
+      srcclr scan
