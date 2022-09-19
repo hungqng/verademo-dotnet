@@ -66,11 +66,11 @@ steps:
 
 - task: PowerShell@2
   displayName: Veracode Software Composition Analysis
+  env:
+    SRCCLR_API_TOKEN: $(SRCCLR_API_TOKEN)
   inputs:
     targetType: 'inline'
     script: |
       Set-ExecutionPolicy AllSigned -Scope Process -Force;
       iex ((New-Object System.Net.WebClient).DownloadString('https://download.srcclr.com/ci.ps1'));
       srcclr scan
-  env:
-    SRCCLR_API_TOKEN: $(SRCCLR_API_TOKEN)
