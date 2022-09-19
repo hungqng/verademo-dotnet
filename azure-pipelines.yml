@@ -73,4 +73,5 @@ steps:
     script: |
       Set-ExecutionPolicy AllSigned -Scope Process -Force;
       iex ((New-Object System.Net.WebClient).DownloadString('https://download.srcclr.com/ci.ps1'));
-      curl -sSL https://download.sourceclear.com/ci.sh | sh -s scan
+      # curl -sSL https://download.sourceclear.com/ci.sh | sh -s scan
+      srcclr scan
