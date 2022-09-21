@@ -83,7 +83,7 @@ steps:
     sandboxName: 'Azure DevOps'
     scanType: 'Dynamic, Static, and Software Composition Analysis'
     importType: 'All Unmitigated Flaws Violating Policy'
-    workItemType: 'Bug'
+    workItemType: 'Issue'
     area: '$(system.teamProject)'
     overwriteAreaPathInWorkItemsOnImport: true
     flawImportLimit: '1000'
