@@ -76,3 +76,16 @@ steps:
       Set-ExecutionPolicy AllSigned -Scope Process -Force
       iex ((New-Object System.Net.WebClient).DownloadString('https://download.srcclr.com/ci.ps1'))
       srcclr scan --allow-dirty
+
+- task: Veracode Flaw Importer@3
+  inputs:
+    ConnectionDetailsSelection: 'Endpoint'
+    AnalysisService: 'Veracode'
+    veracodeAppProfile: 'Verademo'
+    sandboxName: 'Azure DevOps'
+    scanType: 'Dynamic, Static, and Software Composition Analysis'
+    importType: 'All Unmitigated Flaws Violating Policy'
+    workItemType: 'Issue'
+    area: '$(system.teamProject)'
+    overwriteAreaPathInWorkItemsOnImport: true
+    flawImportLimit: '1000'
