@@ -16,7 +16,7 @@ jobs:
       uses: microsoft/setup-msbuild@v1.1
     - uses: actions/checkout@v2
     - name: Setup .NET
-    - uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v1
     - name: Restore dependencies
       run: nuget restore Verademo-dotnet.sln
     - name: Clean Default Build
