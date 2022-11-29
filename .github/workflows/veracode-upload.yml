@@ -10,7 +10,10 @@ name: Veracode-Upload-and-Scan
 jobs:
   build:
     runs-on: windows-latest
+    
     steps:
+    - name: Add msbuild to PATH
+    - uses: microsoft/setup-msbuild@v1.1
     - uses: actions/checkout@v2
     - name: Setup .NET
     - uses: actions/setup-dotnet@v1
@@ -37,6 +40,7 @@ jobs:
       with:
         name: VerademoZip
         path: "./Verademo-dotnet.zip"
+  
   Security:
     needs: build
     name: Veracode Upload and Scan
@@ -58,7 +62,7 @@ jobs:
       - name: Veracode Upload And Scan
         uses: veracode/veracode-uploadandscan-action@0.2.4
         with: 
-          appname: GitHub_VerademoDotNet
+          appname: Verademo
           createprofile: false
           filepath: ./Verademo-dotnet.zip
           vid: '${{ secrets.VERACODE_API_ID }}'
