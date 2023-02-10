@@ -39,8 +39,6 @@ steps:
     filepath: '$(build.artifactstagingdirectory)'
     sandboxName: 'Azure DevOps'
     createProfile: false
-    apiId: '$(VERACODE_API_ID_'
-    apiKey: '$(VERACODE_API_KEY)'
     failBuildOnPolicyFail: false
     failBuildIfUploadAndScanBuildStepFails: false
     importResults: false
