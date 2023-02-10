@@ -31,6 +31,7 @@ steps:
     configuration: '$(buildConfiguration)'
 
 - task: Veracode@3
+  displayName: Veracode Static Analysis
   inputs:
     ConnectionDetailsSelection: 'Endpoint'
     AnalysisService: 'Veracode'
