@@ -35,7 +35,7 @@ steps:
   inputs:
     ConnectionDetailsSelection: 'Endpoint'
     AnalysisService: 'Veracode'
-    veracodeAppProfile: 'Verademo'
+    veracodeAppProfile: 'Verademo-dotnet'
     version: '$(build.buildNumber)'
     filepath: '$(build.artifactstagingdirectory)'
     sandboxName: 'Azure DevOps'
