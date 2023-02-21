@@ -1,0 +1,58 @@
+# ASP.NET
+# Build and test ASP.NET projects.
+# Add steps that publish symbols, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/apps/aspnet/build-aspnet-4
+# This is an example of using VeraDemoDotNet test application with the Veracode Static Pipeline scanner.  A Veracode subscription is required.
+
+trigger:
+- main
+
+variables:
+  solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+
+pool:
+  vmImage: 'windows-latest'
+  #vmImage: 'ubuntu-latest'
+
+steps:
+- task: NuGetToolInstaller@1
+
+- task: NuGetCommand@2
+  inputs:
+    restoreSolution: '$(solution)'
+
+- task: VSBuild@1
+  inputs:
+    solution: '$(solution)'
+    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
+
+- task: Veracode@3
+  inputs:
+    # Access with service connection or API credentials
+    ConnectionDetailsSelection: 'Endpoint'
+    # Service connection name
+    AnalysisService: 'Veracode'
+    veracodeAppProfile: 'Verademo-dotnet'
+    # Name of the scan
+    version: '$(build.buildNumber)'
+    # Filepath to upload
+    filepath: '$(build.artifactstagingdirectory)'
+    # Using exisiting sandbox
+    sandboxName: 'Azure DevOps'
+    # Optional arguments:
+    # Delete a scan with status of incomplete, no modules defined, failed, or cancelled
+    deleteIncompleteScan: 1
+    createProfile: false
+    createSandbox: false
+    # Fail the build if the application fails policy
+    failBuildOnPolicyFail: false
+    # Fail the build if task fails to start
+    failBuildIfUploadAndScanBuildStepFails: false
+    # To view scan results in Azure DevOps
+    importResults: false
+    # Wait time in minutes to fail the build if no scan results available
+    maximumWaitTime: '360'
