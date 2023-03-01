@@ -33,7 +33,7 @@ steps:
 - task: Veracode@3
   displayName: Veracode Static Analysis
   inputs:
-    ConnectionDetailsSelection: 'Endpoint'
+    ConnectionDetailsSelection: 'Service Connection'
     AnalysisService: 'Veracode'
     veracodeAppProfile: 'Verademo-dotnet'
     version: '$(build.buildNumber)'
