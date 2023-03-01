@@ -60,11 +60,6 @@ steps:
     # Wait time in minutes to fail the build if no scan results available
     maximumWaitTime: '360'
 
-- task: VSTest@2
-  inputs:
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
-
 - task: CmdLine@2
   displayName: Veracode Static Pipeline Scanner
   inputs:
