@@ -94,7 +94,7 @@ steps:
 - task: Veracode Flaw Importer@3
   inputs:
     # Access with service connection or API credentials
-    ConnectionDetailsSelection: 'Endpoint'
+    ConnectionDetailsSelection: 'Service Connection'
     # Service connection name
     AnalysisService: 'Veracode'
     veracodeAppProfile: 'Verademo-dotnet'
