@@ -47,7 +47,7 @@ steps:
     sandboxName: 'Azure DevOps'
     # Optional arguments:
     # Delete a scan with status of incomplete, no modules defined, failed, or cancelled
-    deleteIncompleteScan: 1
+    optargs: '-deleteIncompleteScan 1'
     createProfile: false
     createSandbox: false
     # Fail the build if the application fails policy
