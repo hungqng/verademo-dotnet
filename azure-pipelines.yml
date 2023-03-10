@@ -82,6 +82,7 @@ steps:
     SRCCLR_API_TOKEN: $(SRCCLR_API_TOKEN)
   inputs:
     targetType: 'inline'
+    # Set execution policy to AllSigned because PowerShell does not permit scripts to run by default
     script: |
       Set-ExecutionPolicy AllSigned -Scope Process -Force
       iex ((New-Object System.Net.WebClient).DownloadString('https://download.srcclr.com/ci.ps1'))
