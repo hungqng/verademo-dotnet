@@ -5,10 +5,9 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
-- task: Bash@3
+- task: CmdLine@2
   displayName: Veracode CLI SCA
   inputs:
-    targetType: inline
     script: |
       echo "Export credentials from Azure variables"
       export VERACODE_API_KEY_ID=$(VERACODE_API_ID)
