@@ -4,9 +4,6 @@ trigger:
 pool:
   vmImage: 'ubuntu-latest'
 
-variables:
-- group: credentials
-
 steps:
 - task: Bash@3
   displayName: Veracode CLI SCA
