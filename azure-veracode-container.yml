@@ -13,15 +13,14 @@ steps:
   inputs:
     targetType: inline
     script: |
-      pwd
-#     Export credentials from Azure variables
+      echo "Export credentials from Azure variables"
       export VERACODE_API_KEY_ID=$(VERACODE_API_ID)
       export VERACODE_API_KEY_SECRET=$(VERACODE_API_KEY)
-#     Installing Veracode CLI
+      echo "Installing Veracode CLI"
       curl -fsS https://tools.veracode.com/veracode-cli/install | sh
-#     Pull credentials from the exported credentials above
+      echo "Pull credentials from the exported credentials above"
       ./veracode configure
-#     Scan containers alpine:latest and bitnami/moodle
+      echo "Scan containers alpine:latest and bitnami/moodle"
       ./veracode scan --source alpine:latest --type image --format json --output alpine_latest_scan.json
       ./veracode scan --source bitnami/moodle --type image --format table --output bitnami_moodle_scan.json
       ./veracode scan --source https://github.com/veracode/verademo --type repo --format json --output ./veracode_container_scan.json
