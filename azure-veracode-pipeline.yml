@@ -5,7 +5,7 @@
 # This is an example of using VeraDemoDotNet test application with the Veracode Static Pipeline scanner.  A Veracode subscription is required.
 
 trigger:
-- main
+- manual
 
 variables:
   solution: '**/*.sln'
