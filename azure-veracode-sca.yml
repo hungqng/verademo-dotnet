@@ -5,7 +5,7 @@
 # This is an example of using VeraDemoDotNet test application with the Veracode Static Pipeline scanner.  A Veracode subscription is required.
 
 trigger:
-- main
+- manual
 
 variables:
   solution: '**/*.sln'
@@ -44,4 +44,4 @@ steps:
     script: |
       Set-ExecutionPolicy AllSigned -Scope Process -Force
       iex ((New-Object System.Net.WebClient).DownloadString('https://download.srcclr.com/ci.ps1'))
-      srcclr scan --allow-dirty
+      srcclr scan --allow-dirty --ws=lDDImO6
