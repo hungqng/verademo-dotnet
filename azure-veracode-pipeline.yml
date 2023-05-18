@@ -35,13 +35,24 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
+- task: DownloadBuildArtifacts@1
+  inputs:
+    buildType: 'specific'
+    project: 'bfa13e79-62d1-4195-8662-17a89560bd02'
+    pipeline: '4'
+    buildVersionToDownload: 'specific'
+    buildId: '121'
+    downloadType: 'single'
+    artifactName: 'Build'
+    downloadPath: '$(System.ArtifactsDirectory)'
+
 - task: CmdLine@2
   displayName: Veracode Static Pipeline Scanner
   inputs:
     script: |
       curl -sSO https://downloads.veracode.com/securityscan/pipeline-scan-LATEST.zip
       unzip -o pipeline-scan-LATEST.zip
-      java -jar pipeline-scan.jar -vid $(VERACODE_API_ID) -vkey $(VERACODE_API_KEY) -f $(build.artifactstagingdirectory)\Verademo-dotnet.zip -jo true -jf results.json || true
+      java -jar pipeline-scan.jar -vid $(VERACODE_API_ID) -vkey $(VERACODE_API_KEY) -f $(build.artifactstagingdirectory)\Verademo-dotnet.zip -jo true -jf results.json -bf results.json || true
 
 - task: PublishBuildArtifacts@1
   displayName: Create Build Artifact for Veracode Static Pipeline Scanner Results
