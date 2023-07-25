@@ -28,10 +28,10 @@ steps:
     scanType: 'Dynamic, Static, and Software Composition Analysis'
     # List of flaw types:
     # All Flaws, All Unmitigated Flaws, All Flaws Violating Policy, All Unmitigated Flaws Violating Policy
-    importType: 'All Unmitigated Flaws Violating Policy'
+    importType: 'All Unmitigated Flaws'
     # List of work item types:
     # Bug, Issue, Task, Epic, Feature, Test Case
-    workItemType: 'Issue'
+    workItemType: 'Task'
     # Path to the area for grouping the work items
     area: '$(system.teamProject)'
     # Set true to replace the area path
