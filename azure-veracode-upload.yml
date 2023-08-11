@@ -11,6 +11,7 @@ variables:
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
+  app.name: "Verademo-dotnet"
 
 pool:
   vmImage: 'windows-latest'
@@ -36,7 +37,7 @@ steps:
     ConnectionDetailsSelection: 'Service Connection'
     # Service connection name
     AnalysisService: 'Veracode'
-    veracodeAppProfile: 'Verademo-dotnet'
+    veracodeAppProfile: $(app.name)
     # Name of the scan
     version: '$(build.buildNumber)'
     # Filepath to upload
