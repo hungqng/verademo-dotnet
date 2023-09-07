@@ -63,7 +63,7 @@ jobs:
       - name: Veracode Upload And Scan
         uses: veracode/veracode-uploadandscan-action@0.2.4
         with: 
-          appname: Verademo
+          appname: Verademo-dotnet
           createprofile: false
           filepath: ./Verademo-dotnet.zip
           vid: '${{ secrets.VERACODE_API_ID }}'
