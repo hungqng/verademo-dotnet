@@ -18,6 +18,14 @@ steps:
       ./veracode configure
       echo "Scan containers alpine:latest and bitnami/moodle"
       ./veracode scan --source alpine:latest --type image --format json --output alpine_latest_scan.json
+
+      export PASSFAIL=$(jq -r '."policy-passed"' veracode_container_scan.json)
+      echo $PASSFAIL
+      if [[ "$PASSFAIL" == "false" ]]; then
+        echo "Container scan failed policy"
+        exit 1
+      fi
+      
       ./veracode scan --source bitnami/moodle --type image --format json --output bitnami_moodle_scan.json
       echo "Scan repo verademo"
       ./veracode scan --source https://github.com/veracode/verademo --type repo --format json --output ./veracode_container_scan.json
