@@ -33,5 +33,4 @@ steps:
       # Unzip and run it against your API credetials
     script: |
       curl https://tools.veracode.com/integrations/API-Wrappers/CSharp/bin/VeracodeCSharpAPI.zip
-      ls
       VeracodeC#API.exe -action UploadAndScan -vid $(VERACODE_API_ID) -vkey $(VERACODE_API_KEY) -deleteincompletescan 1 -createprofile false -appname "Verademo-dotnet" -sandboxname "Azure DevOps" -version "$(build.buildNumber)" -filepath $(build.artifactStagingDirectory)\Verademo-dotnet.zip
