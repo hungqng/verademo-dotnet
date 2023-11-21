@@ -5,10 +5,11 @@ variables:
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
-  
+
 pool:
   vmImage: 'windows-latest'
 
+steps:
 # Build the application
 - task: VSBuild@1
   inputs:
