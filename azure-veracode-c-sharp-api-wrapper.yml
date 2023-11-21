@@ -37,4 +37,4 @@ steps:
       Expand-Archive -Path $(System.DefaultWorkingDirectory)\VeracodeCSharpAPI.zip -DestinationPath $(System.DefaultWorkingDirectory)\VeracodeCSharpAPI -Force 
       Get-ChildItem -Path $(System.DefaultWorkingDirectory)
       Get-ChildItem -Path $(System.DefaultWorkingDirectory)\VeracodeCSharpAPI
-      $(System.DefaultWorkingDirectory)\VeracodeCSharpAPI\VeracodeC#API.exe -action UploadAndScan -vid $(VERACODE_API_ID) -vkey $(VERACODE_API_KEY) -deleteincompletescan 1 -createprofile false -appname "Verademo-dotnet" -sandboxname "Azure DevOps" -version "$(build.buildNumber)" -filepath $(build.artifactStagingDirectory)\Verademo-dotnet.zip
+      $(System.DefaultWorkingDirectory)\VeracodeCSharpAPI\VeracodeC#API.exe -action UploadAndScan -vid $(VERACODE_API_ID) -vkey $(VERACODE_API_KEY) -createprofile false -appname "Verademo-dotnet" -sandboxname "Azure DevOps" -version "$(build.buildNumber)" -filepath $(build.artifactStagingDirectory)\Verademo-dotnet.zip
