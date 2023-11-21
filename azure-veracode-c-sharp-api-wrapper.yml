@@ -26,12 +26,12 @@ steps:
     configuration: '$(buildConfiguration)'
 
 # Veracode Static scan C# API wrapper
-- task: CmdLine@2
+- task: PowerShell@2
   displayName: Veracode Static Analysis
   inputs:
       # Download the C# API Wrapper
       # Unzip and run it against your API credetials
     script: |
-      curl -sSO https://tools.veracode.com/integrations/API-Wrappers/CSharp/bin/VeracodeCSharpAPI.zip
-      unzip -o VeracodeCSharpAPI.zip
+      Invoke-WebRequest -Uri https://tools.veracode.com/integrations/API-Wrappers/CSharp/bin/VeracodeCSharpAPI.zip -OutFile $zipFilePath
+      Expand-Archive -Path $zipFilePath -DestinationPath $extractedFolderPath -Force Move-Item -Path (Join-Path $extractedFolderPath "VeracodeC#API.exe") -Destination $extractedFilePath -Force
       VeracodeC#API.exe -action UploadAndScan -vid $(VERACODE_API_ID) -vkey $(VERACODE_API_KEY) -deleteincompletescan 1 -createprofile false -appname "Verademo-dotnet" -sandboxname "Azure DevOps" -version "$(build.buildNumber)" -filepath $(build.artifactStagingDirectory)\Verademo-dotnet.zip
