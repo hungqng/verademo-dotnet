@@ -44,4 +44,5 @@ steps:
     script: |
       Set-ExecutionPolicy AllSigned -Scope Process -Force
       iex ((New-Object System.Net.WebClient).DownloadString('https://download.srcclr.com/ci.ps1'))
+      Get-Location
       srcclr scan --allow-dirty --ws=A77H7nM
