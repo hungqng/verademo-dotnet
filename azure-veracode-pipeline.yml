@@ -50,8 +50,6 @@ steps:
   displayName: Veracode Static Pipeline Scanner
   inputs:
     script: |
-      echo %cd%
-      dir
       curl -sSO https://downloads.veracode.com/securityscan/pipeline-scan-LATEST.zip
       unzip -o pipeline-scan-LATEST.zip
       java -jar pipeline-scan.jar -vid $(VERACODE_API_ID) -vkey $(VERACODE_API_KEY) --request_policy Demo -f $(build.artifactstagingdirectory)\Verademo-dotnet.zip -bf D:\a\1\a\Build/results.json || true
