@@ -35,4 +35,4 @@ steps:
     script: |
       Invoke-WebRequest -Uri https://tools.veracode.com/integrations/API-Wrappers/CSharp/bin/VeracodeCSharpAPI.zip -OutFile $(System.DefaultWorkingDirectory)\VeracodeCSharpAPI.zip
       Expand-Archive -Path $(System.DefaultWorkingDirectory)\VeracodeCSharpAPI.zip -DestinationPath $(System.DefaultWorkingDirectory)\VeracodeCSharpAPI -Force 
-      $(System.DefaultWorkingDirectory)\VeracodeCSharpAPI\VeracodeC#API.exe -action UploadAndScan -vid $(VERACODE_API_ID) -vkey $(VERACODE_API_KEY) -createprofile false -appname "Verademo-dotnet" -version "$(build.buildNumber)" -filepath $(build.artifactStagingDirectory)\Verademo-dotnet.zip
+      $(System.DefaultWorkingDirectory)\VeracodeCSharpAPI\VeracodeC#API.exe -action UploadAndScan -vid $(VERACODE_API_ID) -vkey $(VERACODE_API_KEY) -createprofile false -appname "Verademo-dotnet" -scantimeout 60 -version "$(build.buildNumber)" -filepath $(build.artifactStagingDirectory)\Verademo-dotnet.zip
